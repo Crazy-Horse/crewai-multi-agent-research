@@ -1,6 +1,6 @@
 {
-  "as_of_utc": "2026-01-15T08:35:38+00:00",
-  "end_date": "2026-06-30",
+  "as_of_utc": "2026-01-15T09:00:52+00:00",
+  "end_date": "2026-06-26",
   "notes": "Yahoo Finance OHLCV is used as a free price proxy; may not match official exchange settlement.",
   "outputs": {
     "ohlcv_csv": {

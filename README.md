@@ -1,8 +1,3 @@
-Below is a **fully rewritten CrewAI README**, aligned **1-to-1 with the LangGraph README**, and **standardized on `uv`** (no `pip`).
-This is ready to drop directly into `README.md` in your **CrewAI project repo**.
-
----
-
 # Multi-Agent Financial Research (CrewAI)
 
 A **CrewAI-based multi-agent research system** for financial and macroeconomic analysis.

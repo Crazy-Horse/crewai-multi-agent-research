@@ -85,19 +85,27 @@ feature_spec_task:
 
 dataset_build_task:
   description: >
-    Build the final ML-ready dataset for {topic} as CSV (features_daily.csv) with one row per
+    Build the final ML-ready dataset for {topic} as a CSV on disk with one row per
     (commodity, date). Use the continuous front-month series as the canonical price series.
-    Compute market-derived features (returns, volatility, ATR, spreads) and merge exogenous data
-    (FX, macro, COT, weather) if available.
-    Create target_price_t_plus_14 as front_month_price shifted by exactly 14 calendar days forward.
+    Compute market-derived features and merge exogenous data (FX/macro/weather) if available.
+    Create target_price_t_plus_7 and target_price_t_plus_14 as the first trading day on/after
+    date+7 and date+14 calendar days.
     Enforce:
-    - target_price_t_plus_14 must be NULL for the most recent 14 days of data
+    - targets must be NULL for the most recent 7/14 days of data
     - numeric columns float-castable
     - dates ISO-8601
     - no duplicates per (commodity, date)
     - missing values blank (not zero)
-    Append a concise data dictionary after the CSV.
+    - output file paths
+    - row/column counts
+    - a short data dictionary summary (top-level feature groups)
+    - any warnings (dropped columns, missingness)
   expected_output: >
-    1) features_daily.csv content (header + rows), suitable for saving directly to disk.
-    2) Data dictionary in markdown (no code fences).
+    A short markdown report including:
+    - Path to data/processed/features_daily.csv
+    - Path to data/processed/features_daily_data_dictionary.md
+    - Shape (rows, cols)
+    - Target coverage (non-null counts for t+7 and t+14)
+    - Warnings / dropped columns list (if any)
   agent: reporting_analyst
+

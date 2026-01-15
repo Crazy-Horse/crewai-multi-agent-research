@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 import re
 from typing import Dict, Iterable, List, Optional, Sequence
@@ -542,7 +543,6 @@ def build_features_daily_tool(
         reorder=True,
         wx_schema=WX_COMPACT_SCHEMA_COLUMNS,
         target_cols=("target_price_t_plus_7", "target_price_t_plus_14"),
-        target_last=True,
     )
 
     # ----------------------------
@@ -567,4 +567,20 @@ def build_features_daily_tool(
     csv_text = out_path.read_text(encoding="utf-8")
     dd_md = _data_dictionary_markdown(df)
 
-    return f"{csv_text}\n\n{dd_md}"
+    dd_path = out_path.with_name("features_daily_data_dictionary.md")
+    dd_path.write_text(dd_md, encoding="utf-8")
+
+    summary = {
+        "features_csv_path": str(out_path),
+        "data_dictionary_path": str(dd_path),
+        "rows": int(df.shape[0]),
+        "cols": int(df.shape[1]),
+        "targets": {
+            "target_price_t_plus_7_non_null": int(
+                df["target_price_t_plus_7"].notna().sum()) if "target_price_t_plus_7" in df.columns else 0,
+            "target_price_t_plus_14_non_null": int(
+                df["target_price_t_plus_14"].notna().sum()) if "target_price_t_plus_14" in df.columns else 0,
+        },
+    }
+    return json.dumps(summary, indent=2)
+
