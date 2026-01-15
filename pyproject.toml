@@ -1,0 +1,53 @@
+[project]
+name = "multi_agent_research"
+version = "0.1.0"
+description = "multi-agent-research using crewAI"
+authors = [{ name = "Your Name", email = "you@example.com" }]
+requires-python = ">=3.10,<3.14"
+dependencies = [
+    "crewai-tools>=1.7.2",
+    "crewai[tools]==1.7.2",
+    "databento>=0.68.2",
+    "dotenv>=0.9.9",
+    "faiss-cpu>=1.13.2",
+    "fredapi>=0.5.2",
+    "ipython>=8.38.0",
+    "ipywidgets>=8.1.8",
+    "jupyterlab-widgets>=3.0.16",
+    "langchain>=0.3.27",
+    "langchain-community>=0.3.31",
+    "langchain-core>=0.3.83",
+    "langchain-groq>=0.3.8",
+    "langchain-openai>=0.3.23",
+    "langgraph>=1.0.1",
+    "langsmith>=0.6.2",
+    "mcp>=1.16.0",
+    "mcp-server-fetch>=2025.4.7",
+    "nasdaq-data-link>=1.0.4",
+    "numpy>=2.2.6",
+    "openai>=1.83.0",
+    "pandas>=2.3.3",
+    "polygon-api-client>=1.16.3",
+    "pydantic>=2.11.10",
+    "python-dotenv>=1.1.1",
+    "requests>=2.32.5",
+    "sqlalchemy>=2.0.45",
+    "streamlit>=1.52.2",
+    "tavily-python>=0.7.18",
+    "yfinance>=1.0",
+]
+
+[project.scripts]
+multi_agent_research = "multi_agent_research.main:run"
+run_crew = "multi_agent_research.main:run"
+train = "multi_agent_research.main:train"
+replay = "multi_agent_research.main:replay"
+test = "multi_agent_research.main:test"
+run_with_trigger = "multi_agent_research.main:run_with_trigger"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.crewai]
+type = "crew"

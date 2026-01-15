@@ -1,0 +1,29 @@
+{
+  "as_of_utc": "2026-01-15T08:35:38+00:00",
+  "end_date": "2026-06-30",
+  "notes": "Yahoo Finance OHLCV is used as a free price proxy; may not match official exchange settlement.",
+  "outputs": {
+    "ohlcv_csv": {
+      "bytes": 292379,
+      "columns": [
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "adj_close",
+        "volume",
+        "commodity",
+        "ticker"
+      ],
+      "exists": true,
+      "path": "data/raw/coffee_yahoo_ohlcv_1d.csv",
+      "rows": 2776
+    }
+  },
+  "provider": "yahoo_finance",
+  "schema": "ohlcv-1d",
+  "start_date": "2015-01-01",
+  "ticker": "KC=F",
+  "topic": "coffee"
+}

@@ -1,0 +1,103 @@
+research_task:
+  description: >
+    Conduct thorough, source-backed research on {topic} (coffee or sugar) focusing on:
+    supply/demand fundamentals, weather/crop risk, policy/regulation, FX/macro drivers,
+    futures curve structure, and positioning (COT). Current year is {current_year}.
+    Capture the most relevant and recent developments and provide citations and dates.
+  expected_output: >
+    A structured markdown brief:
+    - Executive summary (5 bullets)
+    - Drivers and regimes (tight/neutral/loose; volatility regime)
+    - Key quantitative indicators to track (with definitions and expected directionality)
+    - Event timeline (dated) of major developments affecting {topic}
+    - Sources list with dates
+  agent: researcher
+
+yahoo_extraction_task:
+  description: >
+    Using Yahoo Finance, pull daily OHLCV for {topic} futures as a free price proxy.
+    For coffee use ticker KC=F. Save raw data to data/raw/{topic}_yahoo_ohlcv_1d.csv
+    and write extraction metadata to data/raw/{topic}_extraction_metadata.json.
+  expected_output: >
+    - data/raw/{topic}_yahoo_ohlcv_1d.csv
+    - data/raw/{topic}_extraction_metadata.json
+  agent: reporting_analyst
+
+fred_extraction_task:
+  description: >
+    Fetch daily macroeconomic and FX series relevant to {topic}
+    from FRED for the period {start_date} to {end_date}.
+    Use the tool fred_macro_fx_tool and write the output to:
+    data/processed/{topic}_macro_fx_daily.csv.
+
+    Include:
+    - USD index
+    - US 10Y Treasury rate
+    - Major FX rates (BRL, VND, COP, IDR, ETB, etc.)
+
+  expected_output: >
+    A CSV saved to data/processed/{topic}_macro_fx_daily.csv
+    with a date column and numeric macro/FX columns.
+
+  agent: reporting_analyst
+
+open_meteo_extraction_task:
+  description: >
+    Fetch daily Open-Meteo weather for 6 coffee-growing regions
+    from {start_date} to {end_date}.
+    Use the tool open_meteo_daily_weather_tool and write the result to:
+    data/processed/{topic}_weather_daily.csv.
+
+    Locations (name, latitude, longitude):
+    - Brazil_MinasGerais: -18.5, -44.6
+    - Brazil_EspiritoSanto: -19.5, -40.6
+    - Vietnam_CentralHighlands: 12.7, 108.1
+    - Colombia_Huila: 2.5, -75.6
+    - Indonesia_Lampung: -5.4, 105.3
+    - Ethiopia_Oromia: 8.5, 39.0
+
+  expected_output: >
+    A CSV saved to data/processed/{topic}_weather_daily.csv
+    with columns: date, location, temperature_2m_max,
+    temperature_2m_min, precipitation_sum, wind_speed_10m_max.
+
+  agent: reporting_analyst
+
+feature_spec_task:
+  description: >
+    Convert the research brief into an explicit ML feature specification for {topic} forecasting
+    using the Yahoo Finance price proxy pipeline (KC=F) plus optional exogenous sources.
+    Define:
+    - The prediction target target_price_t_plus_14 (exact definition, units, alignment)
+    - Feature list grouped by category:
+      (market/returns/volatility, macro/FX, positioning/COT, weather)
+    - Data availability timing (as-of constraints) and anti-leakage rules
+    - Missing value policy, unit normalization, and expected lags for weekly/monthly series
+    - Train/validation/test split recommendation for time series (no leakage)
+    Note: term structure features are only included if a second-month series is available.
+  expected_output: >
+    A feature specification document in markdown including:
+    - Target definition
+    - Feature table (name, definition, units, frequency, expected lag)
+    - Data quality rules
+    - Leakage prevention rules
+  agent: reporting_analyst
+
+dataset_build_task:
+  description: >
+    Build the final ML-ready dataset for {topic} as CSV (features_daily.csv) with one row per
+    (commodity, date). Use the continuous front-month series as the canonical price series.
+    Compute market-derived features (returns, volatility, ATR, spreads) and merge exogenous data
+    (FX, macro, COT, weather) if available.
+    Create target_price_t_plus_14 as front_month_price shifted by exactly 14 calendar days forward.
+    Enforce:
+    - target_price_t_plus_14 must be NULL for the most recent 14 days of data
+    - numeric columns float-castable
+    - dates ISO-8601
+    - no duplicates per (commodity, date)
+    - missing values blank (not zero)
+    Append a concise data dictionary after the CSV.
+  expected_output: >
+    1) features_daily.csv content (header + rows), suitable for saving directly to disk.
+    2) Data dictionary in markdown (no code fences).
+  agent: reporting_analyst
