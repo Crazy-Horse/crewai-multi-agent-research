@@ -240,7 +240,7 @@ This project uses **`uv`** instead of `pip` because:
 
 ## Related Projects
 
-* **LangGraph version:** `https://github.com/Crazy-Horse/multi-agent-research`
+* **LangGraph version:** [LANGGRAPH_REPO_URL](https://github.com/Crazy-Horse/multi-agent-research)
 * **Blog post:** `<BLOG_URL>`
 * **Architecture diagrams:** `<DIAGRAMS_URL>`
 
